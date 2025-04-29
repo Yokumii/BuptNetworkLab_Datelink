@@ -1,0 +1,14 @@
+{
+    "name": "Datalink Development",
+    "dockerFile": "../Dockerfile",
+    "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools"
+    ],
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/project,type=bind"
+    ]
+}
