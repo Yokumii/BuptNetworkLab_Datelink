@@ -18,12 +18,20 @@ struct FRAME {
 };
 
 //========= 发送方状态 =========//
-static unsigned char buffer[PKT_LEN * N];  // 环形缓冲区
-static unsigned int send_base = 0;         // 窗口起始
-static unsigned int next_seq = 0;          // 下一个发送序号
+// 缓冲区大小需匹配序列号空间
+static unsigned char buffer[PKT_LEN * (MAX_SEQ + 1)];
+static unsigned int send_base = 0;         // 窗口起始，即最早的未确认的帧
+/*
+	send_base更新逻辑：收到n的确认后，移动到n+1%N，实现累积确认
+*/
+static unsigned int next_seq = 0;          // 下一个发送序号，即新帧的序号
+/*
+	next_seq更新逻辑：每次发送数据帧后，向后移动一个帧序号
+*/
 static int phl_ready = 0;
 
 //========= 接收方状态 =========//
+
 static unsigned int frame_expected = 0;
 
 //========= 协议核心函数 =========//
@@ -39,11 +47,11 @@ static void send_data_frame(bool resend)//这里的resend参数表示是否为�
     if (!resend) {
         // 发送新帧
         while (1) {
-            int window_used = (next_seq - send_base + MAX_SEQ + 1) % (MAX_SEQ + 1);
+            int window_used = (next_seq - send_base + MAX_SEQ + 1) % (MAX_SEQ + 1);//为了保险，这里多加一层防止出现问题
             if (window_used >= N || !phl_ready) break;// 窗口已满或物理层未就绪，退出
 
             // 只有当网络层就绪时才获取包
-            if (!get_packet(buffer + (next_seq % N) * PKT_LEN)) {
+            if (!get_packet(buffer + (next_seq % (MAX_SEQ + 1)) * PKT_LEN)) {
                 dbg_event("No more packets, stop sending\n");
                 break;
             }
@@ -52,7 +60,7 @@ static void send_data_frame(bool resend)//这里的resend参数表示是否为�
             s.kind = FRAME_DATA;
             s.seq = next_seq;
             s.ack = (frame_expected + MAX_SEQ) % (MAX_SEQ + 1);
-            memcpy(s.data, buffer + (next_seq % N) * PKT_LEN, PKT_LEN);
+            memcpy(s.data, buffer + (next_seq % (MAX_SEQ + 1)) * PKT_LEN, PKT_LEN);
 
             dbg_frame("Send DATA %d ack%d, ID %d\n", s.seq, s.ack, *(short *)s.data);
 
@@ -70,7 +78,8 @@ static void send_data_frame(bool resend)//这里的resend参数表示是否为�
             s.kind = FRAME_DATA;
             s.seq = seq;
             s.ack = (frame_expected + MAX_SEQ) % (MAX_SEQ + 1);
-            memcpy(s.data, buffer + (seq % N) * PKT_LEN, PKT_LEN);
+            // 修改重传部分代码：
+			memcpy(s.data, buffer + (seq % (MAX_SEQ + 1)) * PKT_LEN, PKT_LEN);  // 使用模8
 
             dbg_frame("Resend DATA %d ack%d, ID %d\n", s.seq, s.ack, *(short *)s.data);
 
@@ -138,9 +147,10 @@ int main(int argc, char **argv)
                 // 处理累积ACK
                 unsigned int ack = f.ack;
                 dbg_frame("Recv ACK  %d\n", ack);
-
-                if ((send_base <= ack && ack < next_seq) ||
-                    (next_seq < send_base && ack < next_seq)) 
+				//这里默认窗口大小和序号空间没有歧义，需要提前定义好MAX_SEQ和N来防止出错
+				//没有预定义算出窗口大小的原因是C不支持变长数组，用指针太麻烦
+				int ack_in_window = (ack - send_base + MAX_SEQ + 1) % (MAX_SEQ + 1) < N;//这里考虑负数的情况
+                if (ack_in_window) 
                 {
                     while (send_base != (ack + 1) % (MAX_SEQ + 1)) {
                         stop_timer(send_base);
@@ -168,5 +178,6 @@ int main(int argc, char **argv)
             send_ack_frame();
             break;
         }
+
     }
 }
