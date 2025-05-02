@@ -1,8 +1,8 @@
 ## gobackN协议说明
-本项目利用C语言实现了gobackN协议，使用了简单的模拟网络环境，模拟网络延迟，丢包等。
-运行程序：
-./gobackN -fd3 -b 1e-4 A
-./gobackN -fd3 -b 1e-4 B
+本项目利用C语言实现了gobackN协议，使用了简单的模拟网络环境，模拟网络延迟，丢包等。  
+运行程序：  
+./gobackN -fd3 -b 1e-4 A  
+./gobackN -fd3 -b 1e-4 B  
 建立AB站点通信即可
 或者可以修改许多参数
 
