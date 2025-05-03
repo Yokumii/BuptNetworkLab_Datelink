@@ -39,6 +39,9 @@ stop_wait.o: Protocols/stop_wait.c protocol.h datalink.h
 selective_repeat.o: Protocols/selective_repeat.c protocol.h datalink.h
 	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/selective_repeat.c -o selective_repeat.o
 
+gobackN.o: Protocols/gobackN.c protocol.h datalink.h
+	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/gobackN.c -o gobackN.o
+
 protocol.o: protocol.c protocol.h
 	$(CC) $(CFLAGS) -c protocol.c
 
