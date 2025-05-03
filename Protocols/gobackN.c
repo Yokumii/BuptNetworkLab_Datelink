@@ -4,10 +4,6 @@
 #include "../protocol.h"
 #include "../datalink.h"
 
-#define ACK_TIMER   200
-#define DATA_TIMER  540
-#define MAX_SEQ     63       // 序列号0-7
-
 
 struct FRAME {
     unsigned char kind;
