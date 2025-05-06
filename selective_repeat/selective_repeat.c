@@ -58,7 +58,7 @@ static void send_data_frame(void) {
 
     put_frame((unsigned char *)&s, 3 + PKT_LEN);
 
-    start_timer(frame_nr % NR_BUFS, DATA_TIMER); /* 启动帧计时器 */
+    start_timer(frame_nr, DATA_TIMER); /* 启动帧计时器 */
     dbg_event("Start %d's DATA_TIMER\n", s.seq);
     stop_ack_timer();   /* 由于捎带了ACK，所以停止ACK计时器 */
 }
