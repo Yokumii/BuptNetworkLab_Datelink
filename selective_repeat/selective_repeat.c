@@ -138,10 +138,10 @@ int main(int argc, char **argv) {
             case NETWORK_LAYER_READY:
                 /* 从网络层获取一帧，并存入发送缓存区 */
                 get_packet((unsigned char *)&out_buf[frame_nr % NR_BUFS]);
+                dbg_event("Buffer DATA %d, ID %d at out_buf[%d]\n", frame_nr, *(short *)out_buf[frame_nr % NR_BUFS].data, frame_nr % NR_BUFS);
                 nbuffered++; /* 发送缓存区数量 + 1 */
 
                 send_data_frame(); /* 发送数据帧 */
-
                 dbg_event("Now Sender's window is from %d to %d\n", ack_expected, frame_nr);
                 inc(frame_nr);
 
@@ -188,7 +188,7 @@ int main(int argc, char **argv) {
                         while (arrived[frame_expected % NR_BUFS] == true) {
                             /* 将接收窗口下界的数据提交给网络层 */
                             put_packet((unsigned char *)&in_buf[frame_expected % NR_BUFS], len - 7);
-                            dbg_event("Put Packet at in_buf[%d] to Network Layer", frame_expected % NR_BUFS);
+                            dbg_event("Put Packet at in_buf[%d] to Network Layer\n", frame_expected % NR_BUFS);
 
                             no_nak = true;
                             arrived[frame_expected % NR_BUFS] = false;
@@ -205,7 +205,7 @@ int main(int argc, char **argv) {
 
                 /* 收到NAK帧且需要重传的帧在发送窗口内 */
                 if (f.kind == FRAME_NAK && between(ack_expected, (f.ack + 1) % (MAX_SEQ + 1), frame_nr)) {
-                    dbg_frame("Recv NAK with ACK %d", f.ack);
+                    dbg_frame("Recv NAK with ACK %d\n", f.ack);
                     oldest_frame = (f.ack + 1) % (MAX_SEQ + 1);   /* 重传当前收到的ack + 1序号的帧 */
                     resend_data_frame();
                 }
@@ -214,11 +214,11 @@ int main(int argc, char **argv) {
                 while (between(ack_expected, f.ack, frame_nr)) {
                     nbuffered--;   /* 发送缓存区数量 - 1 */
                     stop_timer(ack_expected);   /* 停止发送窗口下界对应帧的计时器 */
-                    dbg_event("Stop DATA_TIMER %d", ack_expected);
+                    dbg_event("Stop DATA_TIMER %d\n", ack_expected);
 
                     /* 前移发送窗口 */
                     inc(ack_expected);
-                    dbg_event("Now Sender's window is from %d to %d\n", ack_expected, (frame_expected + MAX_SEQ) % (MAX_SEQ + 1));
+                    dbg_event("Now Sender's window is from %d to %d\n", ack_expected, (frame_nr + MAX_SEQ) % (MAX_SEQ + 1));
                 }
 
                 break;

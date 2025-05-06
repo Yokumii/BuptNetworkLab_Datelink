@@ -2,7 +2,7 @@
 #define DATALINK_H
 
 #ifndef SEQ_BITS
-#define SEQ_BITS 6
+#define SEQ_BITS 4
 #endif
 
 #define MAX_SEQ ((1 << SEQ_BITS) - 1) /* MAX_SEQ should be 2^SEQ_BITS - 1 */
@@ -11,11 +11,11 @@
   (k = (k + 1) % (MAX_SEQ + 1)) /* 使得序号 k 在 0 ~ MAX_SEQ 之间依次递增*/
 
 #ifndef DATA_TIMER
-#define DATA_TIMER 2000
+#define DATA_TIMER 1500
 #endif
 
 #ifndef ACK_TIMER
-#define ACK_TIMER 666
+#define ACK_TIMER 280
 #endif
 
 /* FRAME kind */
