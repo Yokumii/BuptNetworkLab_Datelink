@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 
     protocol_init(argc, argv);
     lprintf("Go-Back-N Protocol (MAX_SEQ=%d, N=%d)\n", MAX_SEQ, NR_BUFS);
-    lprintf("designed by Wang tianyi"
+    lprintf("designed by Wang tianyi");
     // 初始状态控制
     disable_network_layer();
     phl_ready = 0;
@@ -156,6 +156,7 @@ int main(int argc, char **argv)
             } else if (f.kind == FRAME_DATA) {
                 dbg_frame("Recv DATA %d ack%d, ID %d\n",
                           f.seq, f.ack, *(short *)f.data);
+                unsigned int ack = f.ack;
                 int ack_in_window = (ack - send_base + MAX_SEQ + 1) % (MAX_SEQ + 1) < NR_BUFS;//这里考虑负数的情况
                 if (ack_in_window)
                 {
@@ -169,7 +170,7 @@ int main(int argc, char **argv)
                     frame_expected = (frame_expected + 1) % (MAX_SEQ + 1);
                 }
             }
-            start_ack_timer(ACK_TIMER)
+            start_ack_timer(ACK_TIMER);
             break;
 
         case DATA_TIMEOUT:
