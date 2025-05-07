@@ -55,7 +55,7 @@ static void send_data_frame(bool resend)//这里的resend参数表示是否为�
             struct FRAME s;
             s.kind = FRAME_DATA;
             s.seq = next_seq;
-            s.ack = (frame_expected + MAX_SEQ) % (MAX_SEQ + 1);
+            s.ack = (frame_expected-1 + MAX_SEQ) % (MAX_SEQ + 1);
             memcpy(s.data, buffer + (next_seq % (MAX_SEQ + 1)) * PKT_LEN, PKT_LEN);
 
             dbg_frame("Send DATA %d ack%d, ID %d\n", s.seq, s.ack, *(short *)s.data);
@@ -73,7 +73,7 @@ static void send_data_frame(bool resend)//这里的resend参数表示是否为�
             
             s.kind = FRAME_DATA;
             s.seq = seq;
-            s.ack = (frame_expected + MAX_SEQ) % (MAX_SEQ + 1);
+            s.ack = (frame_expected-1 + MAX_SEQ) % (MAX_SEQ + 1);
             // 修改重传部分代码：
 			memcpy(s.data, buffer + (seq % (MAX_SEQ + 1)) * PKT_LEN, PKT_LEN);  // 使用模8
 
@@ -91,7 +91,7 @@ static void send_ack_frame(void)
 {
     struct FRAME s;
     s.kind = FRAME_ACK;
-    s.ack = (frame_expected + MAX_SEQ) % (MAX_SEQ + 1);
+    s.ack = (frame_expected - 1 + MAX_SEQ) % (MAX_SEQ + 1);
     
     dbg_frame("Send ACK  %d\n", s.ack);
     put_frame((unsigned char *)&s, 2);
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 
     protocol_init(argc, argv);
     lprintf("Go-Back-N Protocol (MAX_SEQ=%d, N=%d)\n", MAX_SEQ, NR_BUFS);
-    
+    lprintf("designed by Wang tianyi"
     // 初始状态控制
     disable_network_layer();
     phl_ready = 0;
@@ -156,13 +156,20 @@ int main(int argc, char **argv)
             } else if (f.kind == FRAME_DATA) {
                 dbg_frame("Recv DATA %d ack%d, ID %d\n",
                           f.seq, f.ack, *(short *)f.data);
-
+                int ack_in_window = (ack - send_base + MAX_SEQ + 1) % (MAX_SEQ + 1) < NR_BUFS;//这里考虑负数的情况
+                if (ack_in_window)
+                {
+                    while (send_base != (ack + 1) % (MAX_SEQ + 1)) {
+                        stop_timer(send_base);
+                        send_base = (send_base + 1) % (MAX_SEQ + 1);
+                    }
+                }
                 if (f.seq == frame_expected) {
                     put_packet(f.data, len - 7);
                     frame_expected = (frame_expected + 1) % (MAX_SEQ + 1);
                 }
-                send_ack_frame();  // 总是回复ACK
             }
+            start_ack_timer(ACK_TIMER)
             break;
 
         case DATA_TIMEOUT:
