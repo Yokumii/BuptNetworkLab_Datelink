@@ -8,61 +8,109 @@ opt3=--port=10003 --flood --utopia
 opt4=--port=10004 --flood
 opt5=--port=10005 --flood --ber=1e-4
 
-# 定义测试目标
-test: datalink
-	# 对每个选项，在新的screen会话中运行datalink程序
-	@$(foreach i,$(shell seq 1 5),\
-		screen -dmS $(i)_datalinkA bash -c 'cd $(OUTPUT_DIR); timeout $(TEST_TIME) ./datalink a $(opt$(i)) --log=$(i)_a.log; exit';\
-		screen -dmS $(i)_datalinkB bash -c 'cd $(OUTPUT_DIR); timeout $(TEST_TIME) ./datalink b $(opt$(i)) --log=$(i)_b.log; exit';\
-	)
-	# 休眠TEST_TIME秒
-	sleep $(TEST_TIME)
-	# 删除所有目标文件
-	${RM} *.o
-	# 打印每个日志文件的最后一行
-	@$(foreach i,$(shell seq 1 5),\
-		echo $$(tail -n 2 $(OUTPUT_DIR)/$(i)_a.log | head -n 1 | awk -F',' '{print $$3}' | awk '{print $$1}') $$(tail -n 2 $(OUTPUT_DIR)/$(i)_b.log | head -n 1 | awk -F',' '{print $$3}' | awk '{print $$1}');\
-	)
-
-# 定义datalink目标
-datalink: clean selectiverepeat.o protocol.o lprintf.o crc32.o
-	# 如果输出目录不存在则创建
-	mkdir $(OUTPUT_DIR) -p
-	# 链接目标文件创建datalink可执行文件
-	gcc selectiverepeat.o protocol.o lprintf.o crc32.o -o $(OUTPUT_DIR)/datalink -lm
-
-selectiverepeat.o: selectiverepeat.o
-	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/selectiverepeat.c
-
-# 清理目标文件
-clean:
-	${RM} *.o datalink
-
 # 设置部分
-
-# 检查SEQ_BITS是否设置
 SEQ_BITS=
 ifeq ($(SEQ_BITS),)
 SEQ_BITS=5
 endif
 
-# 检查DATA_TIMER是否设置
 DATA_TIMER=
 ifeq ($(DATA_TIMER),)
 DATA_TIMER=2500
 endif
 
-# 检查ACK_TIMER是否设置
 ACK_TIMER=
 ifeq ($(ACK_TIMER),)
 ACK_TIMER=300
 endif
 
+TEST_TIME=30
+
 # 根据参数定义输出目录名
-OUTPUT_DIR= Results/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK
+OUTPUT_DIR= Results/$(PROTOCOL)/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S
 
 # 删除输出目录名中的空格
 space=$(empty) $(empty)
 OUTPUT_DIR:=$(subst $(space),,$(OUTPUT_DIR))
 
-TEST_TIME=30
+# 定义编译目标
+build: build_selectiverepeat build_stopwait build_gobackn
+
+build_selectiverepeat: clean
+	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/selectiverepeat.c
+	$(CC) $(CFLAGS) -c protocol.c
+	$(CC) $(CFLAGS) -c lprintf.c
+	$(CC) $(CFLAGS) -c crc32.c
+	$(CC) selectiverepeat.o protocol.o lprintf.o crc32.o -o datalink -lm
+
+build_stopwait: clean
+	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/stopwait.c
+	$(CC) $(CFLAGS) -c protocol.c
+	$(CC) $(CFLAGS) -c lprintf.c
+	$(CC) $(CFLAGS) -c crc32.c
+	$(CC) stopwait.o protocol.o lprintf.o crc32.o -o datalink -lm
+
+build_gobackn: clean
+	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/gobackN.c
+	$(CC) $(CFLAGS) -c protocol.c
+	$(CC) $(CFLAGS) -c lprintf.c
+	$(CC) $(CFLAGS) -c crc32.c
+	$(CC) gobackN.o protocol.o lprintf.o crc32.o -o datalink -lm
+
+# 定义测试目标
+test: test_selectiverepeat test_stopwait test_gobackn
+
+test_selectiverepeat: clean
+	mkdir -p Results/selectiverepeat/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S
+	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/selectiverepeat.c
+	$(CC) $(CFLAGS) -c protocol.c
+	$(CC) $(CFLAGS) -c lprintf.c
+	$(CC) $(CFLAGS) -c crc32.c
+	$(CC) selectiverepeat.o protocol.o lprintf.o crc32.o -o Results/selectiverepeat/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S/datalink -lm
+	@$(foreach i,$(shell seq 1 5),\
+		screen -dmS $(i)_datalinkA bash -c 'cd Results/selectiverepeat/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S; timeout $(TEST_TIME) ./datalink a $(opt$(i)) --log=$(i)_a.log; exit';\
+		screen -dmS $(i)_datalinkB bash -c 'cd Results/selectiverepeat/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S; timeout $(TEST_TIME) ./datalink b $(opt$(i)) --log=$(i)_b.log; exit';\
+	)
+	sleep $(TEST_TIME)
+	${RM} *.o
+	@$(foreach i,$(shell seq 1 5),\
+		echo $$(tail -n 2 Results/selectiverepeat/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S/$(i)_a.log | head -n 1 | awk -F',' '{print $$3}' | awk '{print $$1}') $$(tail -n 2 Results/selectiverepeat/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S/$(i)_b.log | head -n 1 | awk -F',' '{print $$3}' | awk '{print $$1}');\
+	)
+
+test_stopwait: clean
+	mkdir -p Results/stopwait/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S
+	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/stopwait.c
+	$(CC) $(CFLAGS) -c protocol.c
+	$(CC) $(CFLAGS) -c lprintf.c
+	$(CC) $(CFLAGS) -c crc32.c
+	$(CC) stopwait.o protocol.o lprintf.o crc32.o -o Results/stopwait/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S/datalink -lm
+	@$(foreach i,$(shell seq 1 5),\
+		screen -dmS $(i)_datalinkA bash -c 'cd Results/stopwait/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S; timeout $(TEST_TIME) ./datalink a $(opt$(i)) --log=$(i)_a.log; exit';\
+		screen -dmS $(i)_datalinkB bash -c 'cd Results/stopwait/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S; timeout $(TEST_TIME) ./datalink b $(opt$(i)) --log=$(i)_b.log; exit';\
+	)
+	sleep $(TEST_TIME)
+	${RM} *.o
+	@$(foreach i,$(shell seq 1 5),\
+		echo $$(tail -n 2 Results/stopwait/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S/$(i)_a.log | head -n 1 | awk -F',' '{print $$3}' | awk '{print $$1}') $$(tail -n 2 Results/stopwait/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S/$(i)_b.log | head -n 1 | awk -F',' '{print $$3}' | awk '{print $$1}');\
+	)
+
+test_gobackn: clean
+	mkdir -p Results/gobackn/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S
+	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/gobackn.c
+	$(CC) $(CFLAGS) -c protocol.c
+	$(CC) $(CFLAGS) -c lprintf.c
+	$(CC) $(CFLAGS) -c crc32.c
+	$(CC) gobackn.o protocol.o lprintf.o crc32.o -o Results/gobackn/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S/datalink -lm
+	@$(foreach i,$(shell seq 1 5),\
+		screen -dmS $(i)_datalinkA bash -c 'cd Results/gobackn/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S; timeout $(TEST_TIME) ./datalink a $(opt$(i)) --log=$(i)_a.log; exit';\
+		screen -dmS $(i)_datalinkB bash -c 'cd Results/gobackn/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S; timeout $(TEST_TIME) ./datalink b $(opt$(i)) --log=$(i)_b.log; exit';\
+	)
+	sleep $(TEST_TIME)
+	${RM} *.o
+	@$(foreach i,$(shell seq 1 5),\
+		echo $$(tail -n 2 Results/gobackn/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S/$(i)_a.log | head -n 1 | awk -F',' '{print $$3}' | awk '{print $$1}') $$(tail -n 2 Results/gobackn/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S/$(i)_b.log | head -n 1 | awk -F',' '{print $$3}' | awk '{print $$1}');\
+	)
+
+# 清理目标文件
+clean:
+	${RM} *.o datalink
