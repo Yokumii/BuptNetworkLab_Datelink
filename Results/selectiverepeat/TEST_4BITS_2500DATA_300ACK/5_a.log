@@ -1,0 +1,60 @@
+000.000 =============================================================
+000.000                     Station A                               
+000.000 -------------------------------------------------------------
+000.000 Protocol.lib, version 4.0, jiangyanjun0718@bupt.edu.cn
+000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 1.0E-04
+000.000 Log file "5_a.log", TCP port 10005, debug mask 0x00
+000.000 Station A is waiting for station B on TCP port 10005 ... Done.
+000.652 New epoch: Thu May  8 05:11:08 2025
+000.652 =================================================================
+000.652 
+000.652 Datalink using Selective-Repeat protocol designed by Zhang Keming, build: May  8 2025  05:11:08
+003.054 .... 7 packets received, 6702 bps, 83.78%, Err 2 (1.1e-04)
+005.944 .... 12 packets received, 4887 bps, 61.09%, Err 4 (9.9e-05)
+008.841 .... 17 packets received, 4393 bps, 54.91%, Err 7 (1.1e-04)
+011.097 .... 25 packets received, 5028 bps, 62.86%, Err 8 (1.0e-04)
+013.457 .... 30 packets received, 4899 bps, 61.23%, Err 11 (1.2e-04)
+017.892 .... 31 packets received, 3740 bps, 46.75%, Err 13 (1.1e-04)
+021.383 .... 41 packets received, 4102 bps, 51.28%, Err 15 (1.0e-04)
+023.593 .... 52 packets received, 4696 bps, 58.70%, Err 15 (9.2e-05)
+033.310 .... 56 packets received, 3540 bps, 44.25%, Err 24 (1.1e-04)
+035.412 .... 66 packets received, 3918 bps, 48.98%, Err 25 (1.1e-04)
+037.518 .... 72 packets received, 4029 bps, 50.36%, Err 27 (1.1e-04)
+040.980 .... 77 packets received, 3936 bps, 49.20%, Err 30 (1.1e-04)
+043.966 .... 83 packets received, 3948 bps, 49.36%, Err 32 (1.1e-04)
+046.082 .... 93 packets received, 4217 bps, 52.71%, Err 35 (1.1e-04)
+049.286 .... 99 packets received, 4192 bps, 52.40%, Err 36 (1.1e-04)
+051.381 .... 110 packets received, 4464 bps, 55.80%, Err 36 (1.0e-04)
+057.611 .... 116 packets received, 4190 bps, 52.38%, Err 42 (1.1e-04)
+059.728 .... 127 packets received, 4422 bps, 55.28%, Err 43 (1.0e-04)
+063.171 .... 133 packets received, 4375 bps, 54.69%, Err 45 (1.0e-04)
+066.746 .... 144 packets received, 4480 bps, 56.00%, Err 46 (9.9e-05)
+068.854 .... 153 packets received, 4612 bps, 57.65%, Err 47 (9.9e-05)
+070.966 .... 161 packets received, 4707 bps, 58.84%, Err 47 (9.6e-05)
+074.165 .... 166 packets received, 4641 bps, 58.02%, Err 53 (1.0e-04)
+076.947 .... 172 packets received, 4633 bps, 57.91%, Err 54 (1.0e-04)
+082.649 .... 179 packets received, 4485 bps, 56.06%, Err 59 (1.0e-04)
+084.747 .... 189 packets received, 4617 bps, 57.72%, Err 60 (1.0e-04)
+087.915 .... 194 packets received, 4567 bps, 57.09%, Err 62 (1.0e-04)
+090.064 .... 201 packets received, 4618 bps, 57.72%, Err 64 (1.0e-04)
+094.681 .... 204 packets received, 4456 bps, 55.70%, Err 66 (1.0e-04)
+096.775 .... 214 packets received, 4572 bps, 57.15%, Err 66 (9.9e-05)
+098.888 .... 220 packets received, 4599 bps, 57.49%, Err 68 (9.9e-05)
+101.533 .... 223 packets received, 4539 bps, 56.74%, Err 70 (9.9e-05)
+104.714 .... 232 packets received, 4577 bps, 57.22%, Err 74 (1.0e-04)
+107.221 .... 236 packets received, 4547 bps, 56.83%, Err 74 (1.0e-04)
+109.321 .... 244 packets received, 4610 bps, 57.62%, Err 76 (1.0e-04)
+111.436 .... 246 packets received, 4558 bps, 56.98%, Err 78 (1.0e-04)
+115.275 .... 256 packets received, 4585 bps, 57.31%, Err 79 (9.8e-05)
+121.613 .... 266 packets received, 4513 bps, 56.42%, Err 85 (1.0e-04)
+127.011 .... 274 packets received, 4450 bps, 55.63%, Err 90 (1.0e-04)
+130.212 .... 282 packets received, 4467 bps, 55.83%, Err 93 (1.0e-04)
+132.703 .... 291 packets received, 4522 bps, 56.53%, Err 94 (1.0e-04)
+134.843 .... 297 packets received, 4542 bps, 56.77%, Err 96 (1.0e-04)
+136.966 .... 304 packets received, 4576 bps, 57.20%, Err 96 (1.0e-04)
+139.062 .... 312 packets received, 4625 bps, 57.82%, Err 96 (9.9e-05)
+141.453 .... 316 packets received, 4605 bps, 57.56%, Err 99 (1.0e-04)
+143.688 .... 318 packets received, 4562 bps, 57.02%, Err 99 (9.9e-05)
+145.838 .... 328 packets received, 4635 bps, 57.94%, Err 102 (1.0e-04)
+147.948 .... 331 packets received, 4610 bps, 57.63%, Err 106 (1.0e-04)
+151.415 .... 339 packets received, 4613 bps,
