@@ -55,7 +55,7 @@ build_gobackn: clean
 	$(CC) $(CFLAGS) -c protocol.c
 	$(CC) $(CFLAGS) -c lprintf.c
 	$(CC) $(CFLAGS) -c crc32.c
-	$(CC) gobackn.o protocol.o lprintf.o crc32.o -o datalink -lm
+	$(CC) gobackN.o protocol.o lprintf.o crc32.o -o datalink -lm
 
 # 定义测试目标
 test: test_selectiverepeat test_stopwait test_gobackn
