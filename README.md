@@ -8,8 +8,14 @@
 .
 ├── Examples/           # 教师示例实现
 ├── Protocols/          # 协议实现文件
-│   ├── stop_wait.c     # 停等协议实现
-│   └── selective_repeat.c  # 选择重传协议实现
+│   ├── stopwait.c      # 停等协议实现
+│   ├── selectiverepeat.c  # 选择重传协议实现
+│   └── gobackn.c       # 回退N帧协议实现
+├── Results/           # 测试结果目录
+│   ├── selectiverepeat/  # 选择重传协议测试结果
+│   │   └── TEST_5BITS_2500DATA_300ACK_30S/  # 测试结果示例
+│   ├── stopwait/      # 停等协议测试结果
+│   └── gobackn/       # 回退N帧协议测试结果
 ├── Dockerfile         # 开发环境配置
 ├── datalink.c         # 数据链路层协议实现
 ├── datalink.h         # 协议参数规定
@@ -18,6 +24,7 @@
 ├── protocol.c         # 协议通用功能实现
 ├── protocol.h         # 协议通用功能声明
 ├── crc32.c            # CRC32校验实现
+├── crc32_cal.c        # CRC32查表计算实现
 ├── Makefile           # 构建脚本
 └── README.md          # 项目说明文档
 ```
@@ -35,9 +42,39 @@
 
 ## 协议参数说明
 
-- `SEQ_BITS`: 序列号位数（1-6位）
-- `DATA_TIMER`: 数据帧超时时间（毫秒）
-- `ACK_TIMER`: 确认帧超时时间（毫秒）
+- `SEQ_BITS`: 序列号位数（1-6位，默认：5）
+- `DATA_TIMER`: 数据帧超时时间（毫秒，默认：2500）
+- `ACK_TIMER`: 确认帧超时时间（毫秒，默认：300）
+- `TEST_TIME`: 测试持续时间（秒，默认：30）
+
+## 编译说明
+
+### 仅编译
+
+1. 编译所有协议：
+```bash
+make build
+```
+
+2. 编译特定协议：
+```bash
+# 编译选择重传协议
+make build_selectiverepeat
+
+# 编译停等协议
+make build_stopwait
+
+# 编译回退N帧协议
+make build_gobackn
+```
+
+3. 自定义参数编译：
+```bash
+# 自定义序列号位数和超时时间
+make build_selectiverepeat SEQ_BITS=4 DATA_TIMER=1500 ACK_TIMER=500
+```
+
+编译后的可执行文件将保存在项目根目录下，文件名为`datalink`。
 
 ## 测试说明
 
@@ -60,53 +97,64 @@ make
 
 ### 自动测试
 
-> 说明：现在自动测试存在一些小问题，不知道是不是因为容器的原因
-
-1. 使用默认参数测试：
+1. 测试所有协议：
 ```bash
 make test
 ```
 
-2. 自定义参数测试：
+2. 测试特定协议：
 ```bash
-make PROTOCOL=selective_repeat SEQ_BITS=4 DATA_TIMER=1500 ACK_TIMER=500 test
+# 测试选择重传协议
+make test_selectiverepeat
+
+# 测试停等协议
+make test_stopwait
+
+# 测试回退N帧协议
+make test_gobackn
 ```
 
-3. 查看测试结果：
+3. 自定义参数测试：
 ```bash
-ls test_results/
+# 自定义序列号位数、超时时间和测试时长
+make test_selectiverepeat SEQ_BITS=4 DATA_TIMER=1500 ACK_TIMER=500 TEST_TIME=60
 ```
 
-4. 清理测试文件：
+4. 查看测试结果：
 ```bash
-make clean_test
+ls Results/
+```
+
+5. 清理测试文件：
+```bash
+make clean
 ```
 
 ### 测试用例说明
 
 测试用例包含5种不同的网络环境：
 
-1. 理想环境（无丢包、无错误）
-2. 普通环境（无特殊参数）
-3. 理想环境下的洪泛测试
-4. 洪泛测试
-5. 高误码率环境下的洪泛测试
+1. 理想环境（无丢包、无错误）：`--port=10001 --utopia`
+2. 普通环境（无特殊参数）：`--port=10002`
+3. 理想环境下的洪泛测试：`--port=10003 --flood --utopia`
+4. 洪泛测试：`--port=10004 --flood`
+5. 高误码率环境下的洪泛测试：`--port=10005 --flood --ber=1e-4`
 
-## 构建选项
+### 测试结果目录命名规则
 
-```bash
-make [PROTOCOL=protocol_name] [SEQ_BITS=bits] [DATA_TIMER=ms] [ACK_TIMER=ms] [TEST_TIME=seconds]
+测试结果目录按照以下格式命名：
+```
+TEST_<SEQ_BITS>BITS_<DATA_TIMER>DATA_<ACK_TIMER>ACK_<TEST_TIME>S
 ```
 
-- `PROTOCOL`: 协议类型（stop_wait/selective_repeat）
-- `SEQ_BITS`: 序列号位数（默认：6）
-- `DATA_TIMER`: 数据帧超时时间（默认：2000ms）
-- `ACK_TIMER`: 确认帧超时时间（默认：666ms）
-- `TEST_TIME`: 测试持续时间（默认：30秒）
+例如：
+- `TEST_5BITS_2500DATA_300ACK_30S`：使用5位序列号，数据帧超时2500ms，确认帧超时300ms，测试30秒
+- `TEST_4BITS_1500DATA_500ACK_60S`：使用4位序列号，数据帧超时1500ms，确认帧超时500ms，测试60秒
 
-## 帮助信息
+## 其他材料
 
-查看帮助信息：
-```bash
-make help
-```
+关于实验报告和提交的源代码，可以从 [Release](https://github.com/Yokumii/BuptNetworkLab_Datelink/releases/) 中获取。
+
+## 特别说明
+
+代码不保证绝对的正确性，请谨慎借鉴或使用，并自行遵循有关学术规范，如产生任何后果与作者无关。有问题可以发起 [ISSUE](https://github.com/Yokumii/BuptNetworkLab_Datelink/issues) ，但作者后续不一定继续维护该作业仓库。

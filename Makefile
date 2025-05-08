@@ -113,4 +113,8 @@ test_gobackn: clean
 
 # 清理目标文件
 clean:
+<<<<<<< HEAD
 	${RM} *.o datalink
+=======
+	${RM} *.o datalink
+>>>>>>> c11c26cd746d0b49c8ce23edf4af69566bf44dee
