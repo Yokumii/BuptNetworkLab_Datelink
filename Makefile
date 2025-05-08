@@ -51,7 +51,7 @@ build_stopwait: clean
 	$(CC) stopwait.o protocol.o lprintf.o crc32.o -o datalink -lm
 
 build_gobackn: clean
-	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/gobackn.c
+	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/gobackN.c
 	$(CC) $(CFLAGS) -c protocol.c
 	$(CC) $(CFLAGS) -c lprintf.c
 	$(CC) $(CFLAGS) -c crc32.c
