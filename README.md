@@ -47,6 +47,35 @@
 - `ACK_TIMER`: 确认帧超时时间（毫秒，默认：300）
 - `TEST_TIME`: 测试持续时间（秒，默认：30）
 
+## 编译说明
+
+### 仅编译
+
+1. 编译所有协议：
+```bash
+make build
+```
+
+2. 编译特定协议：
+```bash
+# 编译选择重传协议
+make build_selectiverepeat
+
+# 编译停等协议
+make build_stopwait
+
+# 编译回退N帧协议
+make build_gobackn
+```
+
+3. 自定义参数编译：
+```bash
+# 自定义序列号位数和超时时间
+make build_selectiverepeat SEQ_BITS=4 DATA_TIMER=1500 ACK_TIMER=500
+```
+
+编译后的可执行文件将保存在项目根目录下，文件名为`datalink`。
+
 ## 测试说明
 
 ### 手动测试
