@@ -1,0 +1,26 @@
+000.000 =============================================================
+000.000                     Station B                               
+000.000 -------------------------------------------------------------
+000.000 Protocol.lib, version 4.0, jiangyanjun0718@bupt.edu.cn
+000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 1.0E-05
+000.000 Log file "4_b.log", TCP port 10004, debug mask 0x00
+000.000 Station B is connecting station A (TCP port 10004) ... Done.
+000.032 New epoch: Thu May  8 15:05:21 2025
+000.032 =================================================================
+000.032 
+000.032 Go-Back-N Protocol (MAX_SEQ=31, N=16)
+000.032 designed by Wang tianyi.... 8 packets received, 7717 bps, 96.47%, Err 0 (0.0e+00)
+004.543 .... 16 packets received, 7734 bps, 96.67%, Err 0 (0.0e+00)
+006.666 .... 19 packets received, 6118 bps, 76.48%, Err 1 (1.9e-05)
+008.779 .... 27 packets received, 6526 bps, 81.58%, Err 1 (1.4e-05)
+010.872 .... 35 packets received, 6784 bps, 84.80%, Err 1 (1.2e-05)
+012.995 .... 43 packets received, 6940 bps, 86.75%, Err 1 (9.7e-06)
+015.093 .... 51 packets received, 7064 bps, 88.29%, Err 1 (8.3e-06)
+017.230 .... 59 packets received, 7140 bps, 89.25%, Err 2 (1.5e-05)
+019.342 .... 67 packets received, 7208 bps, 90.10%, Err 2 (1.3e-05)
+021.449 .... 75 packets received, 7265 bps, 90.81%, Err 2 (1.2e-05)
+023.560 .... 83 packets received, 7310 bps, 91.37%, Err 3 (1.6e-05)
+025.677 .... 86 packets received, 6942 bps, 86.78%, Err 4 (2.0e-05)
+027.818 .... 94 packets received, 6997 bps, 87.47%, Err 4 (1.8e-05)
+029.916 .... 102 packets received, 7055 bps, 88.19%, Err 4 (1.7e-05)
+030.032 TCP Disconnected.
