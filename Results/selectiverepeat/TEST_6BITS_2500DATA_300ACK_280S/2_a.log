@@ -1,0 +1,61 @@
+000.000 =============================================================
+000.000                     Station A                               
+000.000 -------------------------------------------------------------
+000.000 Protocol.lib, version 4.0, jiangyanjun0718@bupt.edu.cn
+000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 1.0E-05
+000.000 Log file "2_a.log", TCP port 10002, debug mask 0x00
+000.000 Station A is waiting for station B on TCP port 10002 ... Done.
+000.029 New epoch: Fri May  9 16:20:28 2025
+000.029 =================================================================
+000.029 
+000.029 Datalink using Selective-Repeat protocol designed by Zhang Keming, build: May  9 2025  16:20:27
+003.407 .... 7 packets received, 6801 bps, 85.01%, Err 1 (5.3e-05)
+005.518 .... 15 packets received, 7281 bps, 91.02%, Err 1 (2.8e-05)
+007.649 .... 23 packets received, 7418 bps, 92.72%, Err 1 (1.9e-05)
+009.758 .... 31 packets received, 7505 bps, 93.82%, Err 1 (1.4e-05)
+011.864 .... 39 packets received, 7560 bps, 94.50%, Err 1 (1.2e-05)
+013.990 .... 47 packets received, 7585 bps, 94.81%, Err 1 (9.7e-06)
+016.093 .... 55 packets received, 7614 bps, 95.17%, Err 1 (8.3e-06)
+018.223 .... 63 packets received, 7624 bps, 95.30%, Err 1 (7.3e-06)
+020.323 .... 71 packets received, 7643 bps, 95.54%, Err 1 (6.5e-06)
+022.443 .... 79 packets received, 7652 bps, 95.65%, Err 1 (5.8e-06)
+024.554 .... 87 packets received, 7662 bps, 95.77%, Err 1 (5.3e-06)
+026.673 .... 95 packets received, 7668 bps, 95.85%, Err 1 (4.9e-06)
+028.769 .... 103 packets received, 7679 bps, 95.99%, Err 1 (4.5e-06)
+030.904 .... 111 packets received, 7679 bps, 95.98%, Err 1 (4.2e-06)
+032.996 .... 119 packets received, 7689 bps, 96.11%, Err 1 (3.9e-06)
+035.105 .... 127 packets received, 7694 bps, 96.17%, Err 2 (7.3e-06)
+037.225 .... 135 packets received, 7696 bps, 96.20%, Err 2 (6.9e-06)
+039.364 .... 143 packets received, 7694 bps, 96.17%, Err 3 (9.8e-06)
+041.463 .... 151 packets received, 7700 bps, 96.25%, Err 3 (9.3e-06)
+043.576 .... 159 packets received, 7702 bps, 96.28%, Err 3 (8.8e-06)
+045.689 .... 167 packets received, 7705 bps, 96.31%, Err 3 (8.4e-06)
+047.798 .... 175 packets received, 7708 bps, 96.35%, Err 3 (8.0e-06)
+049.932 .... 183 packets received, 7706 bps, 96.33%, Err 3 (7.7e-06)
+052.024 .... 191 packets received, 7712 bps, 96.39%, Err 3 (7.4e-06)
+054.142 .... 199 packets received, 7713 bps, 96.41%, Err 3 (7.1e-06)
+056.248 .... 207 packets received, 7715 bps, 96.44%, Err 3 (6.8e-06)
+058.348 .... 215 packets received, 7718 bps, 96.48%, Err 3 (6.5e-06)
+060.478 .... 223 packets received, 7717 bps, 96.47%, Err 3 (6.3e-06)
+062.591 .... 231 packets received, 7719 bps, 96.48%, Err 3 (6.1e-06)
+064.699 .... 239 packets received, 7720 bps, 96.50%, Err 3 (5.9e-06)
+066.828 .... 247 packets received, 7720 bps, 96.49%, Err 3 (5.7e-06)
+068.941 .... 255 packets received, 7721 bps, 96.51%, Err 3 (5.5e-06)
+071.036 .... 263 packets received, 7724 bps, 96.55%, Err 3 (5.4e-06)
+073.157 .... 271 packets received, 7724 bps, 96.55%, Err 3 (5.2e-06)
+075.255 .... 279 packets received, 7726 bps, 96.58%, Err 4 (6.7e-06)
+077.388 .... 287 packets received, 7725 bps, 96.56%, Err 5 (8.2e-06)
+079.478 .... 294 packets received, 7702 bps, 96.27%, Err 5 (8.0e-06)
+081.594 .... 302 packets received, 7703 bps, 96.28%, Err 5 (7.8e-06)
+083.709 .... 310 packets received, 7704 bps, 96.30%, Err 5 (7.6e-06)
+085.832 .... 318 packets received, 7704 bps, 96.30%, Err 5 (7.4e-06)
+087.955 .... 326 packets received, 7705 bps, 96.31%, Err 5 (7.2e-06)
+090.056 .... 334 packets received, 7707 bps, 96.33%, Err 5 (7.0e-06)
+092.161 .... 342 packets received, 7709 bps, 96.36%, Err 5 (6.9e-06)
+095.075 .... 349 packets received, 7622 bps, 95.27%, Err 7 (9.3e-06)
+097.167 .... 359 packets received, 7669 bps, 95.87%, Err 7 (9.1e-06)
+099.283 .... 367 packets received, 7671 bps, 95.89%, Err 7 (8.9e-06)
+104.344 .... 372 packets received, 7393 bps, 92.42%, Err 7 (8.8e-06)
+108.435 .... 373 packets received, 7130 bps, 89.13%, Err 7 (8.8e-06)
+112.466 ** WARNING: System too busy, sleep 15 ms, but be awakened 69 ms later
+112.501 .

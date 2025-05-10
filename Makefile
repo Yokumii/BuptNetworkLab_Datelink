@@ -11,7 +11,7 @@ opt5=--port=10005 --flood --ber=1e-4
 # 设置部分
 SEQ_BITS=
 ifeq ($(SEQ_BITS),)
-SEQ_BITS=5
+SEQ_BITS=6
 endif
 
 DATA_TIMER=
@@ -37,11 +37,11 @@ OUTPUT_DIR:=$(subst $(space),,$(OUTPUT_DIR))
 build: build_selectiverepeat build_stopwait build_gobackn
 
 build_selectiverepeat: clean
-	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/selectiverepeat.c
+	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/selectiverepeat2.c
 	$(CC) $(CFLAGS) -c protocol.c
 	$(CC) $(CFLAGS) -c lprintf.c
 	$(CC) $(CFLAGS) -c crc32.c
-	$(CC) selectiverepeat.o protocol.o lprintf.o crc32.o -o datalink -lm
+	$(CC) selectiverepeat2.o protocol.o lprintf.o crc32.o -o datalink -lm
 
 build_stopwait: clean
 	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/stopwait.c
@@ -62,11 +62,11 @@ test: test_selectiverepeat test_stopwait test_gobackn
 
 test_selectiverepeat: clean
 	mkdir -p Results/selectiverepeat/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S
-	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/selectiverepeat.c
+	$(CC) $(CFLAGS) -DSEQ_BITS=$(SEQ_BITS) -DDATA_TIMER=$(DATA_TIMER) -DACK_TIMER=$(ACK_TIMER) -c Protocols/selectiverepeat2.c
 	$(CC) $(CFLAGS) -c protocol.c
 	$(CC) $(CFLAGS) -c lprintf.c
 	$(CC) $(CFLAGS) -c crc32.c
-	$(CC) selectiverepeat.o protocol.o lprintf.o crc32.o -o Results/selectiverepeat/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S/datalink -lm
+	$(CC) selectiverepeat2.o protocol.o lprintf.o crc32.o -o Results/selectiverepeat/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S/datalink -lm
 	@$(foreach i,$(shell seq 1 5),\
 		screen -dmS $(i)_datalinkA bash -c 'cd Results/selectiverepeat/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S; timeout $(TEST_TIME) ./datalink a $(opt$(i)) --log=$(i)_a.log; exit';\
 		screen -dmS $(i)_datalinkB bash -c 'cd Results/selectiverepeat/TEST_$(SEQ_BITS)BITS_$(DATA_TIMER)DATA_$(ACK_TIMER)ACK_$(TEST_TIME)S; timeout $(TEST_TIME) ./datalink b $(opt$(i)) --log=$(i)_b.log; exit';\
